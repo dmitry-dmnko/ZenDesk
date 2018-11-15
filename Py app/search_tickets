@@ -1,0 +1,42 @@
+from zdesk import Zendesk
+from zdesk import get_id_from_url
+import urllib.request, json
+import pprint
+
+zendesk = Zendesk(zdesk_url='https://envusa.zendesk.com',
+                  zdesk_email='dmitry.dmytrenko@envusa.design',
+                  zdesk_password='zgXYhMmdxGTT0gMPVOaFfRf5xUNue4UPNsE4MaGs',
+                  zdesk_token=True)
+
+
+
+result = 'https://envusa.zendesk.com/agent/tickets/9357'
+ticket_id = get_id_from_url(result)
+print(ticket_id)
+print(zendesk.ticket_show(id=ticket_id))
+
+tickets = zendesk.ticket_show(id=ticket_id).get('ticket')
+url = tickets.get('url')
+
+print(url[:-4])
+url_comment = url[:-5] + '/comments.json'
+print(url_comment)
+
+
+with urllib.request.urlopen(url_comment+"?address=google") as url:
+    data = zendesk.json.loads(url.read().decode())
+    print(data)
+
+# ticket_id2 = get_id_from_url(result2)
+# print(ticket_id2)
+
+# print(zendesk.ticket_show(id=ticket_id2))
+
+# print(zendesk.groups_list())
+# print(zendesk.users_list())
+# mylist = zendesk.users_list()
+# userlist = mylist.get('users')
+# print(len(userlist))
+# print(userlist)
+# for elem in userlist:
+#         print(elem)
